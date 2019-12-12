@@ -1,0 +1,89 @@
+<launch>
+    <!-- Intel D435 camera launch -->
+    <!-- Control whether a nodelet manager should be started here -->
+    <arg name="external_manager" value="false"/>
+    <!-- Name of the nodelet manager for the camera -->
+    <arg name="manager" value="depth_manager"/>
+    <!-- Publish camera model for rviz -->
+    <arg name="publish_model" value="false"/>
+    <!-- Convert to laserscan -->
+    <arg name="publish_laserscan" value="true"/>
+    <arg name="laserscan_height" value="15"/>
+
+    <!-- Depth image parameters - they are in the arguments to make them easier to spot and change -->
+    <!-- Only enable depth and color streams by default to conserve bandwidth -->
+    <arg name="enable_depth" value="true"/>
+    <arg name="enable_color" value="true"/>
+    <arg name="enable_infra1" value="false"/>
+    <arg name="enable_infra2" value="false"/>
+
+    <arg name="depth_width" value="848"/>
+    <arg name="depth_height" value="480"/>
+    <arg name="depth_fps" value="60"/>
+    <arg name="color_width" value="848"/>
+    <arg name="color_height" value="480"/>
+    <arg name="color_fps" value="60"/>
+
+    <!-- Depth image parameters. Tweak until depth image improves -->
+    <arg name="filters" value=""/>
+    <arg name="clip_distance" value="4"/>
+    <arg name="allow_no_texture_points" value="true"/>
+
+    <!-- Infra streams are typically not used, so they're down here -->
+    <arg name="infra_width" value="848"/>
+    <arg name="infra_height" value="480"/>
+    <arg name="infra_fps" value="60"/>
+
+    <!-- Reset by default, just in case -->
+    <arg name="initial_reset" value="true"/>
+
+    <group ns="depth_camera">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="tf_prefix"                value="depth_camera"/>
+            <arg name="external_manager"         value="$(arg external_manager)"/>
+            <arg name="manager"                  value="$(arg manager)"/>
+            <arg name="serial_no"                value="832112073901"/>
+
+            <arg name="enable_pointcloud"        value="false"/>
+            <arg name="pointcloud_texture_stream" value="RS2_STREAM_ANY"/>
+            <arg name="pointcloud_texture_index"  value="0"/>
+            <arg name="enable_sync"              value="false"/>
+            <arg name="align_depth"              value="true"/>
+
+            <arg name="enable_fisheye"           value="false"/>
+
+            <arg name="depth_width"              value="$(arg depth_width)"/>
+            <arg name="depth_height"             value="$(arg depth_height)"/>
+            <arg name="enable_depth"             value="$(arg enable_depth)"/>
+
+            <arg name="color_width"              value="$(arg color_width)"/>
+            <arg name="color_height"             value="$(arg color_height)"/>
+            <arg name="enable_color"             value="$(arg enable_color)"/>
+
+            <arg name="infra_width"              value="$(arg infra_width)"/>
+            <arg name="infra_height"             value="$(arg infra_height)"/>
+            <arg name="enable_infra1"            value="$(arg enable_infra1)"/>
+            <arg name="enable_infra2"            value="$(arg enable_infra2)"/>
+
+            <arg name="depth_fps"                value="$(arg depth_fps)"/>
+            <arg name="infra_fps"                value="$(arg infra_fps)"/>
+            <arg name="color_fps"                value="$(arg color_fps)"/>
+
+            <arg name="filters"                  value="$(arg filters)"/>
+            <arg name="clip_distance"            value="$(arg clip_distance)"/>
+            <arg name="initial_reset"            value="$(arg initial_reset)"/>
+            <arg name="allow_no_texture_points"  value="$(arg allow_no_texture_points)"/>
+        </include>
+
+        <!-- Run depthimage_to_laserscan here as well -->
+        <node pkg="nodelet" type="nodelet" name="depthimage_to_laserscan" args="load depthimage_to_laserscan/DepthImageToLaserScanNodelet $(arg manager)" if="$(arg publish_laserscan)">
+            <param name="scan_height" type="int" value="$(arg laserscan_height)"/>
+            <param name="range_min" type="double" value="0.35"/>
+            <param name="range_max" type="double" value="$(arg clip_distance)"/>
+            <param name="output_frame_id" value="depth_camera_link"/>
+            <remap from="image" to="depth/image_rect_raw"/>
+            <remap from="camera_info" to="depth/camera_info"/>
+        </node>
+    </group>
+
+</launch>
