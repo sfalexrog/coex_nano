@@ -1,0 +1,45 @@
+<launch>
+    <!-- ArUco detection and pose estimation -->
+    <!-- Can be used with an external nodelet manager to save on image copies-->
+    <arg name="external_manager" default="false"/>
+    <!-- Nodelet manager name -->
+    <arg name="manager" default="aruco_manager"/>
+    <!-- Node name prefix -->
+    <arg name="prefix" default=""/>
+    <!-- Camera name -->
+    <arg name="camera_name" default="main_camera"/>
+    <!-- Map URL -->
+    <arg name="aruco_map" default=""/>
+
+    <node pkg="nodelet" type="nodelet"
+          name="$(arg prefix)aruco_detect"
+          args="load aruco_pose/aruco_detect $(arg manager)"
+          output="screen"
+          clear_params="true">
+        <remap from="image_raw" to="$(arg camera_name)/image_raw"/>
+        <remap from="camera_info" to="$(arg camera_name)/camera_info"/>
+        <remap from="map_markers" to="$(arg prefix)aruco_map/markers" if="$(eval bool(aruco_map))"/>
+        <param name="frame_id_prefix" value="$(arg prefix)aruco_"/>
+        <param name="estimate_poses" value="true"/>
+        <param name="send_tf" value="true"/>
+        <param name="known_tilt" value="map"/>
+        <param name="length" value="0.3375"/>
+    </node>
+
+    <node pkg="nodelet" type="nodelet"
+          name="$(arg prefix)aruco_map"
+          args="load aruco_pose/aruco_map $(arg manager)"
+          output="screen"
+          clear_params="true"
+          if="$(eval bool(aruco_map))">
+        <remap from="image_raw" to="$(arg camera_name)/image_raw"/>
+        <remap from="camera_info" to="$(arg camera_name)/camera_info"/>
+        <remap from="markers" to="$(arg prefix)aruco_detect/markers"/>
+        <param name="map" value="$(arg aruco_map)"/>
+        <param name="known_tilt" value="map"/>
+        <param name="image_axis" value="true"/>
+        <param name="frame_id" value="$(arg prefix)aruco_map_detected"/>
+        <param name="markers/frame_id" value="$(arg prefix)aruco_map"/>
+        <param name="markers/child_frame_id_prefix" value="$(arg prefix)aruco_"/>
+    </node>
+</launch>

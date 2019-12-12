@@ -85,5 +85,4 @@
             <remap from="camera_info" to="depth/camera_info"/>
         </node>
     </group>
-
 </launch>

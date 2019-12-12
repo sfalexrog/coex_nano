@@ -1,0 +1,25 @@
+<launch>
+    <!-- Main control file. Prepares the environment and includes other .launch files that actually launch nodes. -->
+    <!-- No nodes should be launched here. Let's keep this simple. -->
+
+    <!-- Add logger to rosconsole output. This should help figuring out which node did what. -->
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}]: ${logger}: ${message}"/>
+
+    <!-- Run mavros with a custom configuration. This configuration is based on Clever. -->
+    <include file="$(find coex_nano)/launch/mavros.launch">
+    </include>
+
+    <!-- Run depth camera. Default parameters should be "good enough". -->
+    <include file="$(find coex_nano)/launch/depth_camera.launch">
+    </include>
+
+    <!-- Run jetson camera. Also runs anything that could be interesting for it (optical flow, aruco markers). -->
+    <include file="$(find coex_nano)/launch/jetson_camera.launch">
+    </include>
+
+    <!-- Run simple_offboard. Maybe throw in some additional nodes -->
+    <include file="$(find coex_nano)/launch/simple_offboard.launch">
+    </include>
+
+
+</launch>
