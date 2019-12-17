@@ -60,16 +60,25 @@ public:
             double transformed_range = std::sqrt(point_transformed.x * point_transformed.x +
                                                  point_transformed.y * point_transformed.y +
                                                  point_transformed.z * point_transformed.z);
-            // FIXME: we're not considering Z here
-            float transformed_angle = std::atan2(point_transformed.y, point_transformed.x);
-            if (!std::isnan(transformed_angle)) {
-                result->angle_min = std::min(transformed_angle, result->angle_min);
-                result->angle_max = std::max(transformed_angle, result->angle_max);
+            // Calculate min/max angle in new frame
+            if (i == 0 || i == (src->ranges.size() - 1)) {
+                // We use a unit point since the one in our message might be a NaN
+                geometry_msgs::Point unit_pt, unit_pt_transformed;
+                unit_pt.x = cos(angle);
+                unit_pt.y = sin(angle);
+                unit_pt.z = 0;
+                tf2::doTransform(unit_pt, unit_pt_transformed, transform);
+                float angle = std::atan2(unit_pt_transformed.y, unit_pt_transformed.x);
+                if (i == 0) {
+                    result->angle_min = angle;
+                } else {
+                    result->angle_max = angle;
+                }
             }
             result->ranges.push_back(transformed_range);
         }
         // FIXME: angle_increment might be inverted?
-        result->angle_increment = -(result->angle_max - result->angle_min) / (result->ranges.size() - 1);
+        result->angle_increment = (result->angle_max - result->angle_min) / (result->ranges.size() - 1);
         transformed_pub_.publish(result);
     }
 };
