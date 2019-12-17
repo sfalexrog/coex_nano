@@ -69,6 +69,7 @@
   <exec_depend>sensor_msgs</exec_depend>
   <depend>nodelet</depend>
   <depend>image_transport</depend>
+  <depend>geometry_msgs</depend>
   <!-- Not strictly required for build, but used in launch files -->
   <depend>depthimage_to_laserscan</depend>
 
@@ -76,6 +77,6 @@
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
-
+    <nodelet plugin="${prefix}/nodelets.xml"/>
   </export>
 </package>

@@ -1,0 +1,15 @@
+<launch>
+    <include file="$(find coex_nano)/launch/depth_camera.launch">
+    </include>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="depth_camera_frd" args="0 0 0 0 0 3.1415926 depth_camera_link depth_camera_link_frd"/>
+
+    <node pkg="nodelet"
+          type="nodelet"
+          name="laserscan_transform"
+          args="load coex_nano/LaserscanTransform depth_camera/depth_manager"
+          output="screen">
+        <remap from="laserscan" to="depth_camera/scan"/>
+        <param name="target_frame" value="depth_camera_link_frd"/>
+    </node>
+</launch>

@@ -16,6 +16,10 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   nodelet
   image_transport
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -135,11 +139,22 @@ add_library(depth_to_distance
   src/depth_to_distance.cpp
 )
 
+add_library(laserscan_transform
+  src/laserscan_transform.cpp
+)
+
 add_dependencies(depth_to_distance ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(depth_to_distance
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
+
+add_dependencies(laserscan_transform ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(laserscan_transform
+  ${catkin_LIBRARIES}
+)
+
+target_compile_features(laserscan_transform PRIVATE cxx_std_14)
 
 
 ## Add cmake target dependencies of the library

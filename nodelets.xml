@@ -1,0 +1,9 @@
+<library path="lib/liblaserscan_transform">
+    <class name="coex_nano/LaserscanTransform"
+           type="coex_nano::LaserscanTransform"
+           base_class_type="nodelet::Nodelet">
+        <description>
+            
+        </description>
+    </class>
+</library>
