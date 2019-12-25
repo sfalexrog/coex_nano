@@ -10,7 +10,7 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   mavros
-  realsense2_camera
+  #  realsense2_camera
   roscpp
   rospy
   sensor_msgs
