@@ -128,3 +128,6 @@ vision_speed:
 
 vibration:
   frame_id: "base_link"
+
+obstacle_distance:
+  mav_frame: "BODY_FLU"

@@ -22,8 +22,8 @@
         <param name="frame_id_prefix" value="$(arg prefix)aruco_"/>
         <param name="estimate_poses" value="true"/>
         <param name="send_tf" value="true"/>
-        <param name="known_tilt" value="map"/>
-        <param name="length" value="0.3375"/>
+        <param name="known_tilt" value=""/>
+        <param name="length" value="0.222"/>
     </node>
 
     <node pkg="nodelet" type="nodelet"

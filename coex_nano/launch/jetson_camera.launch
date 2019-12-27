@@ -49,7 +49,7 @@
         <arg name="manager" value="$(arg manager)"/>
         <arg name="prefix" value="main_camera_"/>
         <arg name="camera_name" value="main_camera"/>
-        <arg name="aruco_map" value="$(find aruco_pose)/map/map.txt"/>
+        <!-- <arg name="aruco_map" value="$(find aruco_pose)/map/map.txt"/> -->
     </include>
 
     <node pkg="clever" type="camera_markers" ns="main_camera" name="main_camera_markers">
