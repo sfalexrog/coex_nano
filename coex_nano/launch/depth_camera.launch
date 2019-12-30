@@ -95,6 +95,7 @@
               output="screen">
             <remap from="/laserscan" to="scan"/>
             <param name="target_frame" value="depth_camera_link_frd"/>
+            <param name="flip_only" value="true"/>
         </node>
 
         <!-- Body to camera transform -->

@@ -26,10 +26,33 @@ public:
         transform_buffer_ = std::make_unique<tf2_ros::Buffer>(ros::Duration(1.0));
         transform_listener_ = std::make_unique<tf2_ros::TransformListener>(*transform_buffer_.get());
 
-        laserscan_sub_ = nh.subscribe("/laserscan", 1, &LaserscanTransform::ls_callback, this);
         transformed_pub_ = nh_priv.advertise<sensor_msgs::LaserScan>("transformed_laserscan", 1);
         target_frame_ = nh_priv.param<std::string>("target_frame", "laserscan_frd");
+        bool do_stupid_flip_instead_of_proper_transform = nh_priv.param<bool>("flip_only", false);
+        if (do_stupid_flip_instead_of_proper_transform) {
+            laserscan_sub_ = nh.subscribe("/laserscan", 1, &LaserscanTransform::ls_flip, this);
+        } else {
+            laserscan_sub_ = nh.subscribe("/laserscan", 1, &LaserscanTransform::ls_callback, this);
+        }
         NODELET_INFO("Laserscan transformer up");
+    }
+
+    void ls_flip(const sensor_msgs::LaserScanConstPtr& src) {
+        sensor_msgs::LaserScanPtr result = boost::make_shared<sensor_msgs::LaserScan>();
+        result->header.frame_id = target_frame_;
+        result->header.stamp = src->header.stamp;
+        result->angle_min = src->angle_min;
+        result->angle_max = src->angle_max;
+        result->ranges.reserve(src->ranges.size());
+        result->range_min = src->range_min;
+        result->range_max = src->range_max;
+        result->angle_increment = src->angle_increment;
+
+        for(auto it = src->ranges.rbegin(); it != src->ranges.rend(); ++it)
+        {
+            result->ranges.push_back(*it);
+        }
+        transformed_pub_.publish(result);
     }
 
     void ls_callback(const sensor_msgs::LaserScanConstPtr& src) {
