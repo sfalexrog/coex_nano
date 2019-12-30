@@ -130,4 +130,4 @@ vibration:
   frame_id: "base_link"
 
 obstacle:
-  mav_frame: "BODY_FLU"
+  mav_frame: "BODY_FRD"
