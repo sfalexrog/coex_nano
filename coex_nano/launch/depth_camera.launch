@@ -96,5 +96,8 @@
             <remap from="/laserscan" to="scan"/>
             <param name="target_frame" value="depth_camera_link_frd"/>
         </node>
+
+        <!-- Body to camera transform -->
+        <node pkg="tf2_ros" type="static_transform_publisher" name="body_to_depth_camera" args="0.05 0 -0.03 0 0 0 base_link depth_camera_link"/>
     </group>
 </launch>
