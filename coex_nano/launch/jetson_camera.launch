@@ -29,7 +29,7 @@
         <param name="fps" value="30"/>
         
         <param name="frame_id" value="main_camera_optical"/>
-        <param name="camera_info_url" value="file://$(find coex_nano)/camera_info/fisheye_cam_arducam_1280.yaml"/>
+        <param name="camera_info_url" value="file://$(find coex_nano)/camera_info/fisheye_cam_b0103_1280.yaml"/>
     </node>
 
     <!-- Optical flow nodelet -->
