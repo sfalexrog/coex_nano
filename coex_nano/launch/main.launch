@@ -17,6 +17,10 @@
     <include file="$(find coex_nano)/launch/jetson_camera.launch">
     </include>
 
+    <!-- Run tracking camera. Also runs anyting that is related to the tracking camera. -->
+    <include file="$(find coex_nano)/launch/tracking_camera.launch">
+    </include>
+
     <!-- Run rangefinder node. -->
     <include file="$(find coex_nano)/launch/rangefinder.launch">
     </include>

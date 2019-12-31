@@ -1,4 +1,69 @@
 <launch>
-    <!-- Tracking camera - TODO -->
+    <!-- Intel T265 tracking camera launch -->
+    <!-- Serial number - used to select the correct camera -->
+    <arg name="serial_no"           default="905312112021"/>
+    <!-- Camera name (and TF prefix) -->
+    <arg name="camera"              default="tracking_camera"/>
+    <arg name="tf_prefix"           default="$(arg camera)"/>
+    <!-- Control whether a nodelet manager should be started here -->
+    <arg name="external_manager"    default="false"/>
+    <!-- Name of the nodelet manager for the camera -->
+    <arg name="manager"             default="realsense2_camera_manager"/>
+
+    <!-- Fisheye image parameters - it's a good idea to not publish them at all -->
+    <arg name="fisheye_width"       default="848"/> 
+    <arg name="fisheye_height"      default="800"/>
+    <arg name="enable_fisheye1"     default="false"/>
+    <arg name="enable_fisheye2"     default="false"/>
+    <arg name="fisheye_fps"         default="30"/>
+
+    <!-- IMU data publishing parameters -->
+    <arg name="gyro_fps"            default="200"/>
+    <arg name="accel_fps"           default="62"/>
+    <arg name="enable_gyro"         default="true"/>
+    <arg name="enable_accel"        default="true"/>
+
+    <!-- Synchronize data between data streams -->
+    <arg name="enable_sync"           default="false"/>
+
+    <!-- IMU parameters -->
+    <arg name="linear_accel_cov"      default="0.01"/>
+    <arg name="initial_reset"         default="false"/>
+    <arg name="unite_imu_method"      default=""/>
+  
+    <group ns="$(arg camera)">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="tf_prefix"                value="$(arg tf_prefix)"/>
+            <arg name="serial_no"                value="$(arg serial_no)"/>
+            <arg name="external_manager"         value="$(arg external_manager)"/>
+            <arg name="manager"                  value="$(arg manager)"/>
+
+            <arg name="enable_sync"              value="$(arg enable_sync)"/>
+
+            <arg name="fisheye_width"            value="$(arg fisheye_width)"/>
+            <arg name="fisheye_height"           value="$(arg fisheye_height)"/>
+            <arg name="enable_fisheye1"          value="$(arg enable_fisheye1)"/>
+            <arg name="enable_fisheye2"          value="$(arg enable_fisheye2)"/>
+
+            <arg name="fisheye_fps"              value="$(arg fisheye_fps)"/>
+            <arg name="gyro_fps"                 value="$(arg gyro_fps)"/>
+            <arg name="accel_fps"                value="$(arg accel_fps)"/>
+            <arg name="enable_gyro"              value="$(arg enable_gyro)"/>
+            <arg name="enable_accel"             value="$(arg enable_accel)"/>
+
+            <arg name="linear_accel_cov"         value="$(arg linear_accel_cov)"/>
+            <arg name="initial_reset"            value="$(arg initial_reset)"/>
+            <arg name="unite_imu_method"         value="$(arg unite_imu_method)"/>
+        </include>
+
+        <!-- Reverse transform from odom to camera -->
+        <node pkg="camera_link_rev"
+              type="camera_link_rev_node"
+              name="camera_link_rev"
+              output="screen">
+            <param name="camera_prefix" value="/$(arg camera)"/>
+            <param name="camera_tf_prefix" value="$(arg camera)_"/>
+        </node>
+    </group>
 
 </launch>
