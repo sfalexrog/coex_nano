@@ -60,6 +60,7 @@ void cameraLinkRev::t265OdomSampleCallback(const nav_msgs::Odometry::ConstPtr& m
   transformStamped.setData(transformStamped.inverse());
   tf2::convert(transformStamped, transformMsg);
   transformMsg.header.frame_id = camera_tf_prefix + "link_rev";
+  transformMsg.header.stamp = msg->header.stamp;
   transformMsg.child_frame_id = camera_tf_prefix + "pose_frame_rev";
   this->tfBroadcaster.sendTransform(transformMsg);
 
@@ -78,6 +79,7 @@ void cameraLinkRev::t265OdomSampleCallback(const nav_msgs::Odometry::ConstPtr& m
   transformStamped.setData(transformStamped.inverse());
   tf2::convert(transformStamped, transformMsg);
   transformMsg.header.frame_id = camera_tf_prefix + "pose_frame_rev";
+  transformMsg.header.stamp = msg->header.stamp;
   transformMsg.child_frame_id = camera_tf_prefix + "odom_frame_rev";
   this->tfBroadcaster.sendTransform(transformMsg);
 }
