@@ -64,6 +64,8 @@
             <param name="camera_prefix" value="/$(arg camera)"/>
             <param name="camera_tf_prefix" value="$(arg camera)_"/>
         </node>
+        
+        <!-- Body to camera transform -->
+        <node pkg="tf2_ros" type="static_transform_publisher" name="body_to_tracking_camera" args="0.05 0 -0.06 0.005 0.344 0.006 0.939 base_link tracking_camera_link_rev"/>
     </group>
-
 </launch>
