@@ -28,6 +28,7 @@
             - manual_control
             # - mocap_pose_estimate
             - obstacle_distance
+            - odom
             - param
             - px4flow
             - rc_io
