@@ -16,7 +16,7 @@
         <param name="gcs_quiet_mode" value="true"/>
         <rosparam command="load" file="$(find coex_nano)/launch/mavros_config.yaml"/>
         <remap from="mavros/distance_sensor/rangefinder_sub" to="rangefinder/range"/>
-        <remap from="mavros/obstacle/send" to="depth_camera/laserscan_transform/transformed_laserscan"/>
+        <remap from="mavros/obstacle_distance/send" to="depth_camera/laserscan_transform/transformed_laserscan"/>
         <rosparam param="plugin_whitelist">
             - altitude
             - command

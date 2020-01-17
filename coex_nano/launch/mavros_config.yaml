@@ -131,4 +131,4 @@ vibration:
 
 obstacle_distance:
   mav_frame: "BODY_FRD"
-  print_mavlink: false
+  print_mavlink: true
